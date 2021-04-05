@@ -43,7 +43,7 @@ public class BoxControl : MonoBehaviour
 
     private void Touch()
     {
-        if (!Input.GetMouseButtonDown(0) || isTouched) return;
+        if (!Input.anyKeyDown || isTouched) return;
         boxCollider.enabled = true;
         rb.gravityScale = 1;
         isTouched = true;
@@ -56,7 +56,7 @@ public class BoxControl : MonoBehaviour
         int checkAttemped = 0;
         int checkLanded = 0;
 
-        while (checkAttemped++ < 25)
+        while (checkAttemped++ < 20)
         {
             Debug.Log($"Att : {checkAttemped}, Land = {checkLanded}");
             if (Mathf.Abs(rb.velocity.y) <= 0.02f)

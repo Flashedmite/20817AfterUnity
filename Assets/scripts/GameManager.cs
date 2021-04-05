@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] boxPrefab;
 
-    public Text scoreText; //UI
+    //UI
+    public Text scoreText;
     private int score;
+    public GameObject retryButton;
 
     private void Start()
     {
         score = 0;
+        retryButton.SetActive(false);
     }
 
     // 착지 성공시 해당 블럭에서 이 코드 부름
@@ -36,13 +40,18 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        print("끝");
+        retryButton.SetActive(true);
     }
 
-    // Score UI
-    public void scorePlus()
+    // UI
+    private void scorePlus()
     {
         score++;
         scoreText.text = score.ToString();
+    }
+
+    public void Retry()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
