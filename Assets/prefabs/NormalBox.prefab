@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5449638381102147149}
   - component: {fileID: 5449638381102147137}
   m_Layer: 0
-  m_Name: Box
+  m_Name: NormalBox
   m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

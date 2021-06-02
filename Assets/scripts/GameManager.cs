@@ -2,21 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] boxPrefab;
+    private GameObject nowBox;
 
-    //UI
-    public Text scoreText;
+    public Text scoreText; //UI
     private int score;
-    public GameObject retryButton;
+    private bool isTouched;
 
     private void Start()
     {
         score = 0;
-        retryButton.SetActive(false);
+
+        Camera.main.transform.position -= Vector3.up * 2.5f;
+        GenerateBox();
+        Camera.main.GetComponent<CameraController>().camYPosSet(nowBox.transform);
+    }
+
+    private void Update() {
+        Touch();
+    }
+
+    public void Touch(){
+        if (!Input.GetMouseButtonDown(0) || isTouched || EventSystem.current.IsPointerOverGameObject()) return;
+        nowBox.GetComponent<Rigidbody2D>().gravityScale = 1;
+        StartCoroutine(nowBox.GetComponent<BoxControl>().CheckLanded());
+
+        isTouched = true;
+        nowBox.GetComponent<BoxControl>().isTouched = isTouched;
     }
 
     // 착지 성공시 해당 블럭에서 이 코드 부름
@@ -35,23 +51,23 @@ public class GameManager : MonoBehaviour
     public void GenerateBox()
     {
         Vector3 GenPos = new Vector3(Random.Range(-2f,2f), Camera.main.transform.position.y + 2.5f, 0);
-        Instantiate(boxPrefab[Random.Range(0,5)], GenPos, boxPrefab[0].transform.rotation);
+        nowBox = Instantiate(boxPrefab[Random.Range(0,5)], GenPos, boxPrefab[0].transform.rotation);
+
+        
+        isTouched = false;
+        nowBox.GetComponent<BoxControl>().isTouched = isTouched;
     }
 
     public void GameOver()
     {
-        retryButton.SetActive(true);
+        print("끝");
+        Camera.main.GetComponent<CameraController>().EndGame(score);
     }
 
-    // UI
-    private void scorePlus()
+    // Score UI
+    public void scorePlus()
     {
         score++;
         scoreText.text = score.ToString();
-    }
-
-    public void Retry()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
